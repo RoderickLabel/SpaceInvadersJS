@@ -934,7 +934,6 @@ var LaserInvaders = function (x, y) {
     LaserCannon.call(this, x, y);
 };
 LaserInvaders.prototype = Object.create(LaserCannon.prototype);
-
 LaserInvaders.prototype.move = function () {
     this.y += this.velocity;
     this.render();             
@@ -1001,14 +1000,10 @@ LaserUfoInvader.prototype.render = function () {
 };
 
 
-
-
-
 var BaseShelter = function (x, y) {
     ObjectGame.call(this, x, y);
     this.currentMap = 0;
 };
-
 BaseShelter.prototype = Object.create(ObjectGame.prototype);
 
 
