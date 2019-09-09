@@ -900,7 +900,6 @@ CoreCannon.prototype.shoot = function() {
 var LaserCannon = function (x, y) {
     this.x = x;
     this.y = y - 10;
-    //this.velocity = 48;
     this.velocity = 30;
     this.isAlive = 1;
     this.width = 3;
