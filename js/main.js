@@ -11,7 +11,7 @@ var cv, ctx,
 /**
  * Draw Functions
  */
-var background = function (color) {
+var clearScreen = function (color) {
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, cv.width, cv.height);
 };
@@ -259,7 +259,7 @@ var SceneMenu = function (Session) {
     Scene.call(this, Session);
     this.sceneName = "sceneMenu";
     this.draw = function () {        
-        background(this.session.definitions.backgroundColor);
+        clearScreen(this.session.definitions.backgroundColor);
         drawHeader(this.session.players[0], this.session.players[1], this.session.hiScore);
         drawFooter();
         ctx.fillText("Press   Enter   KEY", 250, 300);
@@ -275,7 +275,7 @@ var SceneInstructions = function (Session) {
     this.sceneName = "sceneInstructions";
     this.draw = function () {
 
-        background(this.session.definitions.backgroundColor);
+        clearScreen(this.session.definitions.backgroundColor);
         drawHeader(Session.players[0], Session.players[1], this.session.hiScore);
         drawFooter();
         
@@ -324,7 +324,7 @@ var SceneGame = function (Session) {
 
         var parent = this;
 
-        background(parent.session.definitions.backgroundColor);
+        clearScreen(parent.session.definitions.backgroundColor);
         ctx.font = parent.session.definitions.fontProperties;
         drawHeader(parent.session.players[0], parent.session.players[1], parent.session.hiScore);
         drawFooter();
@@ -332,7 +332,7 @@ var SceneGame = function (Session) {
 
         window.setTimeout(function () {
             
-            background(parent.session.definitions.backgroundColor);
+            clearScreen(parent.session.definitions.backgroundColor);
             drawHeader(parent.session.players[0], parent.session.players[1], parent.session.hiScore);
             drawFooter();
 
@@ -351,7 +351,7 @@ var SceneGame = function (Session) {
 
             window.setInterval(function() {
 
-                background(parent.session.definitions.backgroundColor);
+                clearScreen(parent.session.definitions.backgroundColor);
                 drawHeader(parent.session.players[0], parent.session.players[1], parent.session.hiScore);
                 drawFooter();
 
@@ -447,12 +447,13 @@ var SceneWinner = function (Session) {
     Scene.call(this, Session);
     this.sceneName = "sceneWinner"; 
     this.draw = function () {
-        background(this.session.definitions.backgroundColor);
+        clearScreen(this.session.definitions.backgroundColor);
         ctx.font = this.session.definitions.fontProperties;
         ctx.fillText("Thanks for Playing!", 10, 50);
     };
 };
 SceneWinner.prototype = Object.create(Scene.prototype);
+
 /**
  * Scene Loser
  */
@@ -460,7 +461,7 @@ var SceneLoser = function (Session) {
     Scene.call(this, Session);
     this.sceneName = "sceneLoser"; 
     this.draw = function () {
-        background(this.session.definitions.backgroundColor);
+        clearScreen(this.session.definitions.backgroundColor);
         ctx.font = this.session.definitions.fontProperties;
         ctx.fillText("You Lose!",10,50);
     };
@@ -1035,7 +1036,7 @@ var SpaceInvaders = function () {
             new SceneLoser(gameSession)
         ];        
 
-        var GameScenes = [new SceneGame(gameSession)];
+        // var GameScenes = [new SceneWinner(gameSession)]; // Line to test each scene individually
         var scenesManager = new ScenesManager(GameScenes);
         scenesManager.run();
 
