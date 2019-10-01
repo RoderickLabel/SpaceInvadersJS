@@ -1,17 +1,102 @@
 
 /**
  * Space Invader Classic in Canvas
- * @author Roderick Ruotolo <roderickruotolo@gmail.com>
+ * @author Rodrigo Ruotolo <roderickruotolo@gmail.com>
  */
 
 var cv, ctx,
     gameSession;
     //hiScore = 2000;
 
+// Início de todas as chamadas do jogo
+window.addEventListener("load", function () {
+    var setUp = new SetUp();
+    var game = new SpaceInvaders();
+    setUp.init();
+    game.init();
+    SoundsManager.loadSounds();
+});
+
+/**
+ * Game Definitions
+ */
+var Definitions = {
+    fontProperties : "17pt 'Courier'",
+    pixelSize : 3,
+    primaryColor : "#FFFFFF",
+    secondaryColor : "#AAFFFF",
+    backgroundColor : "#000000",
+    widthScreen: 750,
+    heightScreen: 680,
+};
+
+var SetUp = function () {
+    this.init = function () {
+        cv = document.getElementById("cv");
+        cv.width = Definitions.widthScreen;
+        cv.height = Definitions.heightScreen;
+        ctx = cv.getContext("2d");
+    }   
+};
+
+/**
+ * Game Session
+ */
+var Session = function (Definitions) {
+    this.players = new Array();
+    this.definitions = Definitions;
+    this.includePlayers = function (Player) {
+        this.players.push(Player);
+    }
+    this.hiScore = 5000;
+};
+
+/**
+ * Game Player
+ */
+var Player = function () {
+    this.won = false;
+    this.score = 0;
+    this.isAlive = true;
+    this.lives = 4;
+
+    this.killed = function () {        
+        this.lives--;
+
+        if (this.lives == 0) {
+            this.isAlive = false;
+        }
+    }
+};
+
+var SpaceInvaders = function () {
+    this.init = function () {
+        gameSession = new Session(Definitions);
+
+        gamePlayer1 = new Player();
+        gamePlayer2 = new Player();
+
+        gameSession.includePlayers(gamePlayer1);
+        gameSession.includePlayers(gamePlayer2);
+        
+        var GameScenes = [
+            new SceneMenu(gameSession), 
+            new SceneInstructions(gameSession), 
+            new SceneGame(gameSession), 
+            new SceneWinner(gameSession), 
+            new SceneLoser(gameSession)
+        ];        
+
+        // var GameScenes = [new SceneWinner(gameSession)]; // Line to test each scene individually
+        var scenesManager = new ScenesManager(GameScenes);
+        scenesManager.run();
+    };
+};
+
 /**
  * Draw Functions
  */
-var clearScreen = function (color) {
+var clearScreen = function (cv, ctx, color) {
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, cv.width, cv.height);
 };
@@ -67,53 +152,11 @@ if (!String.prototype.padStart) {
 }
 
 
-/**
- * Game Definitions
- */
-var Definitions = {
-    fontProperties : "17pt 'Courier'",
-    pixelSize : 3,
-    primaryColor : "#FFFFFF",
-    secondaryColor : "#AAFFFF",
-    backgroundColor : "#000000",
-    widthScreen: 750,
-    heightScreen: 680,
-};
-
-/**
- * Game Session
- */
-var Session = function (Definitions) {
-    this.players = new Array();
-    this.definitions = Definitions;
-    this.includePlayers = function (Player) {
-        this.players.push(Player);
-    }
-    this.hiScore = 5000;
-};
-
-/**
- * Game Player
- */
-var Player = function () {
-    this.won = false;
-    this.score = 0;
-    this.isAlive = true;
-    this.lives = 4;
-    this.killed = function () {        
-        this.lives--;
-        if (this.lives == 0) {
-            this.isAlive = false;
-        }
-    }
-};
-
 
 /**
  * Draw Score
  */
 var drawHeader = function (Player1, Player2, HiScore) {
-
     var player1 = Player1;
     var score = new String(Player1.score);
 
@@ -129,7 +172,6 @@ var drawHeader = function (Player1, Player2, HiScore) {
     ctx.fillText("SCORE<2>", 600, 30);
     ctx.fillText(score.padStart(4, "0"), 625, 60);
     //ctx.fillText(Player2.score, 40, 60);
-
 };
 
 var drawFooter = function () {
@@ -138,20 +180,18 @@ var drawFooter = function () {
     ctx.fillText("CREDIT 00", 550, 670);
 };
 
-var generateFrames = function (callback) {    
-    
+var generateFrames = function (callback) {        
     frameRate = 0;
+
     setInterval(function () {
         if (callback != null) {
             callback();
         }
         frameRate++;
     }, 60);
-
 };
 
-var typeWriter = function (text, x, y, callback) {
-    
+var typeWriter = function (text, x, y, callback) {    
     var total = text.length;
     var counter = 0;
     var spaceLetter = 14;
@@ -175,15 +215,13 @@ var typeWriter = function (text, x, y, callback) {
         }
         counter++;
     }, 60);
-
-}
+};
 
 var turnThePage = function (direction, callback) {
-
-    var count = 0;
-    var intDirection = 1;
-    var initX = 0;
-    var velocity = 6;
+    var count = 0,
+        intDirection = 1,
+        initX = 0,
+        velocity = 6;
 
     if (direction == "left") {
         intDirection *= -1
@@ -209,8 +247,7 @@ var turnThePage = function (direction, callback) {
         }
         count += velocity;
     }, 50);
-
-}
+};
 
 var Menu = {
     option : 1,
@@ -247,9 +284,7 @@ var Menu = {
 var Scene = function (Session) {
     this.sceneName = "";
     this.session = Session;
-    this.draw = function () {
-        
-    };
+    this.draw = function () {};
 };
 
 /**
@@ -259,7 +294,7 @@ var SceneMenu = function (Session) {
     Scene.call(this, Session);
     this.sceneName = "sceneMenu";
     this.draw = function () {        
-        clearScreen(this.session.definitions.backgroundColor);
+        clearScreen(cv, ctx, this.session.definitions.backgroundColor);
         drawHeader(this.session.players[0], this.session.players[1], this.session.hiScore);
         drawFooter();
         ctx.fillText("Press   Enter   KEY", 250, 300);
@@ -275,7 +310,7 @@ var SceneInstructions = function (Session) {
     this.sceneName = "sceneInstructions";
     this.draw = function () {
 
-        clearScreen(this.session.definitions.backgroundColor);
+        clearScreen(cv, ctx, this.session.definitions.backgroundColor);
         drawHeader(Session.players[0], Session.players[1], this.session.hiScore);
         drawFooter();
         
@@ -324,7 +359,7 @@ var SceneGame = function (Session) {
 
         var parent = this;
 
-        clearScreen(parent.session.definitions.backgroundColor);
+        clearScreen(cv, ctx, parent.session.definitions.backgroundColor);
         ctx.font = parent.session.definitions.fontProperties;
         drawHeader(parent.session.players[0], parent.session.players[1], parent.session.hiScore);
         drawFooter();
@@ -332,7 +367,7 @@ var SceneGame = function (Session) {
 
         window.setTimeout(function () {
             
-            clearScreen(parent.session.definitions.backgroundColor);
+            clearScreen(cv, ctx, parent.session.definitions.backgroundColor);
             drawHeader(parent.session.players[0], parent.session.players[1], parent.session.hiScore);
             drawFooter();
 
@@ -351,7 +386,7 @@ var SceneGame = function (Session) {
 
             window.setInterval(function() {
 
-                clearScreen(parent.session.definitions.backgroundColor);
+                clearScreen(cv, ctx, parent.session.definitions.backgroundColor);
                 drawHeader(parent.session.players[0], parent.session.players[1], parent.session.hiScore);
                 drawFooter();
 
@@ -447,7 +482,7 @@ var SceneWinner = function (Session) {
     Scene.call(this, Session);
     this.sceneName = "sceneWinner"; 
     this.draw = function () {
-        clearScreen(this.session.definitions.backgroundColor);
+        clearScreen(cv, ctx, this.session.definitions.backgroundColor);
         ctx.font = this.session.definitions.fontProperties;
         ctx.fillText("Thanks for Playing!", 10, 50);
     };
@@ -461,7 +496,7 @@ var SceneLoser = function (Session) {
     Scene.call(this, Session);
     this.sceneName = "sceneLoser"; 
     this.draw = function () {
-        clearScreen(this.session.definitions.backgroundColor);
+        clearScreen(cv, ctx, this.session.definitions.backgroundColor);
         ctx.font = this.session.definitions.fontProperties;
         ctx.fillText("You Lose!",10,50);
     };
@@ -535,10 +570,8 @@ var ScenesManager = function (GameScenes) {
 /**
  * @return Array - a object array
  */
-var createSpaceInvaders = function () { 
-    
+var createSpaceInvaders = function () {     
     var AlienInvaders = [];
-
     // Create indexes for push
     for (var i = 0; i < 5; i++) {
         AlienInvaders[i] = [];
@@ -667,6 +700,7 @@ ObjectsInStage.animateInvaders = function (toogle) {
             this.alienInvaders[i][j].alternateMap(toogle);
         }
     }
+
     for (var i = 0; i < this.ufo.length; i++) {
         this.ufo[i].alternateMap(toogle);
     }
@@ -765,7 +799,6 @@ ObjectsInStage.verifyCannonShoot = function (Session) {
 
 
 ObjectsInStage.moveInvadersTroopers = function (x, y) { 
-
     var stepY = 0;
     var condition = (this.alienInvaders[0][10].x > cv.width - 60 || this.alienInvaders[0][0].x < 15);
 
@@ -787,7 +820,6 @@ ObjectsInStage.moveInvadersTroopers = function (x, y) {
     } else {
         this.currentLineInvaders--;
     }
-
 };
 
 // Alien invaders from game
@@ -1005,53 +1037,3 @@ var BaseShelter = function (x, y) {
     this.currentMap = 0;
 };
 BaseShelter.prototype = Object.create(ObjectGame.prototype);
-
-
-var SetUp = function () {
-    this.init = function () {        
-        cv = document.getElementById("cv");
-        cv.width = Definitions.widthScreen;
-        cv.height = Definitions.heightScreen;
-        ctx = cv.getContext("2d");
-    }   
-};
-
-var SpaceInvaders = function () {
-
-    this.init = function () {
-
-        gameSession = new Session(Definitions);
-
-        gamePlayer1 = new Player();
-        gamePlayer2 = new Player();
-
-        gameSession.includePlayers(gamePlayer1);
-        gameSession.includePlayers(gamePlayer2);
-        
-        var GameScenes = [
-            new SceneMenu(gameSession), 
-            new SceneInstructions(gameSession), 
-            new SceneGame(gameSession), 
-            new SceneWinner(gameSession), 
-            new SceneLoser(gameSession)
-        ];        
-
-        // var GameScenes = [new SceneWinner(gameSession)]; // Line to test each scene individually
-        var scenesManager = new ScenesManager(GameScenes);
-        scenesManager.run();
-
-    };
-
-};
-
-
-// Início de todas as chamadas do jogo
-window.addEventListener("load", function () {
-    var setUp = new SetUp();
-    var game = new SpaceInvaders();
-    setUp.init();
-    game.init();
-    SoundsManager.loadSounds();
-});
-
-  
