@@ -52,9 +52,17 @@ var SceneInstructions = function (Session) {
     this.sceneName = "sceneInstructions";
 
     this.draw = function () {
-        clearScreen(cv, ctx, this.session.definitions.backgroundColor);
-        drawHeader(ctx, this.session.definitions, Session.players[0], Session.players[1], this.session.hiScore);
-        drawFooter(ctx, this.session.definitions);
+
+    	var session = this.session;
+
+        clearScreen(cv, ctx, 
+        	session.definitions.backgroundColor);
+        drawHeader(ctx, 
+        	session.definitions, 
+        	session.players[0], 
+        	session.players[1], 
+        	session.hiScore);
+        drawFooter(ctx, session.definitions);
         
         var ufo     = new UfoInvader(cv.width / 3.3, cv.height  / 1.95);
         var small   = new SmallInvader(cv.width / 3.14, cv.height / 1.79);
@@ -64,16 +72,16 @@ var SceneInstructions = function (Session) {
         ObjectsOnStage.avatars = new Array(ufo, small, medium, large);
         ctx.fillText("*SCORE   ADVANCE   TABLE*", cv.width / 3.9, cv.height / 2.1);
 
-        typeWriter(ctx, "PLAY", cv.width / 2.4, cv.height / 3.3, function() {
-            typeWriter(ctx, "SPACE    INVADERS!", cv.width / 3.1, cv.height / 2.7, function() {
+        typeWriter(ctx, session.definitions, "PLAY", cv.width / 2.4, cv.height / 3.3, function() {
+            typeWriter(ctx, session.definitions, "SPACE    INVADERS!", cv.width / 3.1, cv.height / 2.7, function() {
                 for (var i = 0; i < ObjectsOnStage.avatars.length; i++) {
                     ObjectsOnStage.avatars[i].render();
                 }
-                typeWriter(ctx, this.session.definitions, "= ? MISTERY", cv.width / 2.5, cv.height / 1.85, function() {
-                    typeWriter(ctx, this.session.definitions, "= 30 POINTS", cv.width / 2.5, cv.height / 1.7, function() {
-                        typeWriter(ctx, this.session.definitions, "= 20 POINTS", cv.width / 2.5, cv.height / 1.55, function() {
-                            typeWriter(ctx, this.session.definitions, "= 10 POINTS", cv.width / 2.5, cv.height / 1.4, function (){ 
-                                turnThePage(ctx, this.session.definitions, "right");
+                typeWriter(ctx, session.definitions, "= ? MISTERY", cv.width / 2.5, cv.height / 1.85, function() {
+                    typeWriter(ctx, session.definitions, "= 30 POINTS", cv.width / 2.5, cv.height / 1.7, function() {
+                        typeWriter(ctx, session.definitions, "= 20 POINTS", cv.width / 2.5, cv.height / 1.55, function() {
+                            typeWriter(ctx, session.definitions, "= 10 POINTS", cv.width / 2.5, cv.height / 1.4, function (){ 
+                                turnThePage(ctx, session.definitions, "right");
                              })
                         })
                     })
@@ -104,10 +112,17 @@ var SceneGame = function (Session) {
 
         var parent = this;
 
-        clearScreen(cv, ctx, parent.session.definitions.backgroundColor);
-        ctx.font = parent.session.definitions.fontProperties;
-        drawHeader(ctx, parent.session.definitions, parent.session.players[0], parent.session.players[1], parent.session.hiScore);
-        drawFooter(ctx, parent.session.definitions);
+        clearScreen(cv, 
+        	ctx, 
+        	parent.session.definitions.backgroundColor);
+        //ctx.font = parent.session.definitions.fontProperties;
+        drawHeader(ctx, 
+        	parent.session.definitions, 
+	        parent.session.players[0], 
+	        parent.session.players[1], 
+	        parent.session.hiScore);
+        drawFooter(ctx, 
+        	parent.session.definitions);
         ctx.fillText("PLAY  PLAYER <1>", cv.width / 3, cv.height / 2.1); 
 
         window.setTimeout(function () {
