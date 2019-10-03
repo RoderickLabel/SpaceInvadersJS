@@ -1,10 +1,12 @@
+/**
+ * @description Alien invaders from game
+ * @author Rodrigo Ruotolo <roderickruotolo@gmail.com>
+ */
 
-// Alien invaders from game
 var Invader = function (x, y) {
     ObjectGame.call(this, x, y);
     this.currentMap = 0;
 };
-
 Invader.prototype = Object.create(ObjectGame.prototype);
 
 Invader.prototype.alternateMap = function (statusToggle) {
@@ -14,9 +16,9 @@ Invader.prototype.alternateMap = function (statusToggle) {
         this.currentMap = 0;
     } else if (statusToggle && this.currentMap == 2) {
         this.currentMap = 3;
-    }    
-    //this.render(this.maps[this.currentMap], this.x, this.y);    
+    }
 };
+
 
 var SmallInvader = function (x, y) {
     ObjectGame.call(this, x, y);
@@ -75,6 +77,7 @@ var UfoInvader = function (x, y) {
     this.height = Definitions.pixelSize * this.maps[0].length;
 }
 UfoInvader.prototype = Object.create(Invader.prototype);
+
 
 var CoreCannon = function(x, y) {     
     Invader.call(this, x, y);

@@ -1,5 +1,6 @@
 /**
  * Draw Functions
+ * @author Rodrigo Ruotolo <roderickruotolo@gmail.com>
  */
 
 
@@ -31,8 +32,6 @@ var drawEllipse = function (ctx, x, y, w, h) {
     ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
     ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
     ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
-    //ctx.closePath(); // not used correctly, see comments (use to close off open path)
-    //ctx.stroke();
     ctx.fill();
 };
 
@@ -159,7 +158,8 @@ if (!String.prototype.padStart) {
         else {
             targetLength = targetLength-this.length;
             if (targetLength > padString.length) {
-                padString += padString.repeat(targetLength/padString.length); //append to original to ensure we are longer than needed
+                //append to original to ensure we are longer than needed
+                padString += padString.repeat(targetLength/padString.length); 
             }
             return padString.slice(0,targetLength) + String(this);
         }

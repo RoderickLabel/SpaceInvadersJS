@@ -1,6 +1,9 @@
+/**
+ * @author Rodrigo Ruotolo <roderickruotolo@gmail.com>
+ */
 
 /**
- * Object Game
+ * Object Game is parent of the majority actors game kinds
  */
 var ObjectGame = function (x, y) {
     //this.centerX;

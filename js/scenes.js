@@ -2,14 +2,18 @@
  * @author Rodrigo Ruotolo Barbosa <roderickruotolo@gmail.com>
  * Game Scenes
  * @description AllObjects responsible by display scenes from game: 
- * ScenesManager
- * Scene
- * SceneMenu
- * SceneInstructions
- * SceneGame
- * SceneWinner
- * SceneLoser
+ * 	ScenesManager
+ * 	Scene
+ * 	SceneMenu
+ * 	SceneInstructions
+ * 	SceneGame
+ * 	SceneWinner
+ * 	SceneLoser
  *
+ */
+
+/**
+ * Scene Mother
  */
 var Scene = function (Session) {
     this.sceneName = "";
@@ -29,11 +33,13 @@ var SceneMenu = function (Session) {
         		.session
         		.definitions
         		.backgroundColor);
+
         drawHeader(ctx, 
         	this.session.definitions, 
         	this.session.players[0], 
         	this.session.players[1], 
         	this.session.hiScore);
+
         drawFooter(ctx, this.session.definitions);
         drawTextMenu(ctx, this.session.definitions);
         Menu.drawOnePlayer();
@@ -146,8 +152,8 @@ var SceneGame = function (Session) {
             ObjectsOnStage.cannon = new CoreCannon(50, 580);
             ObjectsOnStage.alienInvaders = createSpaceInvaders();
             ObjectsOnStage.laserCannon = new Array();
-
             
+            // Fake rendering 
             masks = new SpaceInvadersMask(ObjectsOnStage.alienInvaders);
             masks.create();
 
@@ -167,8 +173,9 @@ var SceneGame = function (Session) {
                 
                 
                 // ufo movement
-                if (ObjectsOnStage.ufo[0].x > cv.width + 100 || ObjectsOnStage.ufo[0].x < -100) {
-                    ObjectsOnStage.ufo[0].direction *= -1;
+                if (ObjectsOnStage.ufo[0].x > cv.width + 100 || 
+                	ObjectsOnStage.ufo[0].x < -100) {
+                    	ObjectsOnStage.ufo[0].direction *= -1;
                 } // ufo move and render
                 ObjectsOnStage.ufo[0].move(ObjectsOnStage.ufo[0].velocity, 0);
                 ObjectsOnStage.ufo[0].render();
@@ -215,7 +222,7 @@ var SceneGame = function (Session) {
 
             }, 60);
             
-            var controlsGame = function (e) {
+            var controlsCannon = function (e) {
                 var key = e.which || e.keyCode;
 
                 // shoot
@@ -234,9 +241,9 @@ var SceneGame = function (Session) {
                 }
             };
 
-            window.addEventListener("keydown", controlsGame);
+            window.addEventListener("keydown", controlsCannon);
             if (ObjectsOnStage.stageIsOver) {            
-                window.removeEventListener("keydown", controlsGame);
+                window.removeEventListener("keydown", controlsCannon);
             }
 
             
@@ -311,9 +318,11 @@ var ScenesManager = function (GameScenes) {
         // Aqui iniciamos o menu e setaremos o objeto this.session.definitions 
         // dependendo das escolhas do usuário 
         if (this.gameScenes[this.currentScene].sceneName == "sceneMenu") {
+
             var initGame = function (e) {
                 var key = e.which || e.keyCode;
-                if (key === 13) { // 13 is enter
+
+                if (key === 13) { // 13 is enter key
                     // code for enter
                     parent.nextScene();
                     window.removeEventListener("keydown", initGame);

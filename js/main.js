@@ -1,6 +1,6 @@
 
 /**
- * Space Invader Classic in Canvas
+ * Space Invaders Classic in Canvas
  * @author Rodrigo Ruotolo <roderickruotolo@gmail.com>
  */
 
@@ -21,14 +21,17 @@ var Definitions = {
     heightScreen: 680,
 };
 
+
+
 // Início de todas as chamadas do jogo
 window.addEventListener("load", function () {
-    var setUp = new SetUp();
-    var game = new SpaceInvaders();
-    setUp.init();
+
+    var game = new SpaceInvaders();    
     game.init();
-    SoundsManager.loadSounds();
+
 });
+
+
 
 
 
@@ -73,6 +76,12 @@ var Player = function () {
 
 var SpaceInvaders = function () {
     this.init = function () {
+
+        setUp = new SetUp();
+        setUp.init();
+
+        SoundsManager.loadSounds();
+
         gameSession = new Session(Definitions);
 
         gamePlayer1 = new Player();
@@ -133,14 +142,16 @@ var Menu = {
 
 
 /**
- * @return Array - a object array
+ * @return Invader[] 
  */
 var createSpaceInvaders = function () {     
     var AlienInvaders = [];
+    
     // Create indexes for push
     for (var i = 0; i < 5; i++) {
         AlienInvaders[i] = [];
     }
+
     // Populate array
     for (var i = 0; i < 11; i++) {
         // Create Small Invaders
@@ -155,6 +166,7 @@ var createSpaceInvaders = function () {
         AlienInvaders[4][i] = new LargeInvader(100 + (50 * i), 20 + 300);
 
     }
+
     return AlienInvaders;
 };
 
@@ -199,8 +211,3 @@ var SpaceInvadersMask = function (AlienInvaders) {
         }
     }
 };
-
-
-
-
-

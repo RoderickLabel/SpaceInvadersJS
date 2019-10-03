@@ -1,5 +1,7 @@
-
-
+/**
+ * @author Rodrigo Ruotolo <roderickruotolo@gmail.com>
+ */
+ 
 // Object collection from Scene
 var ObjectsOnStage = { currentLineInvaders : 4, directionInvaders : 1 };
 
